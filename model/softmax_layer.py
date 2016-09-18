@@ -7,10 +7,10 @@ import numpy as np
 class SoftmaxLayer(object):
     def __init__(self, input, n_in, n_out):
         self.input = input
-
+        rng = np.random.RandomState()
         self.W = theano.shared(
-            value=np.zeros(
-                (n_in, n_out),
+            value=np.asarray(
+                rng.uniform(0,1,(n_in,n_out)),
                 dtype=theano.config.floatX
             ),
             name='W',

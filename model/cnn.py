@@ -40,8 +40,8 @@ class CNN(object):
 
 
 
-        self.learning_rate = 0.1
-        self.n_epochs = 10
+        self.learning_rate = 0.05
+        self.n_epochs = 100
 
     def train(self):
         index = T.lscalar()
@@ -86,14 +86,6 @@ class CNN(object):
         )
 
         cost = layer3.negative_log_likelihood(y)
-        validation_model = theano.function(
-            inputs=[index],
-            outputs=[layer3.errors(y),layer0.params],
-            givens={
-                x:self.validation_data_x[index * self.mini_batch_size:(index + 1) * self.mini_batch_size],
-                y:self.validation_data_y[index * self.mini_batch_size:(index + 1) * self.mini_batch_size]
-            }
-        )
 
         params = layer3.params + layer2.params + layer1.params + layer0.params
 
@@ -103,8 +95,7 @@ class CNN(object):
             (param_i, param_i - self.learning_rate * grad_i)
             for param_i, grad_i in zip(params, grads)
             ]
-        print (index * self.mini_batch_size).dtype
-        print self.train_data_x[0:2]
+
         train_model = theano.function(
             inputs=[index],
             outputs=cost,
@@ -114,6 +105,16 @@ class CNN(object):
                 y: self.train_data_y[index * batch_size:(index + 1) * batch_size]
             }
         )
+
+        validation_model = theano.function(
+            inputs=[index],
+            outputs=layer3.errors(y),
+            givens={
+                x: self.validation_data_x[index * batch_size:(index + 1) * batch_size],
+                y: self.validation_data_y[index * batch_size:(index + 1) * batch_size]
+            }
+        )
+
 
         print("training")
 
@@ -126,15 +127,23 @@ class CNN(object):
             this_validation_loss = np.mean(validation_losses)
             print ("error rate:%f"%this_validation_loss)
 
+
+            ave_cost = []
             for mini_batch_index in range(self.n_train_batches):
                 cost_ij = train_model(mini_batch_index)
                 iter = (epoch) * self.n_train_batches + mini_batch_index
+                ave_cost.append(cost_ij)
 
-                if iter % 100 == 0:
-                    print('training @ iter = %d cost is %f' % (iter, cost_ij))
+                if mini_batch_index % 100 == 0:
+                    print('training @ iter = %d mini batch index is %d' % (iter,mini_batch_index))
+                    # print cost_ij
+
+                # if mini_batch_index>200:
+                #     break
+            print (ave_cost)
+            ave_cost = np.mean(ave_cost)
+            print("ave cost is ",ave_cost)
             epoch += 1
-            print layer0.params
-
 
 
 
