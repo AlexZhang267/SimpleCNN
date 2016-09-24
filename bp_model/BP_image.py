@@ -3,19 +3,22 @@ from utils.data_loader import load_train_data,load_validation_data
 from utils.utils import utils
 from hidden_layer import HiddenLayer
 from softmax_layer import SoftmaxLayer
+import time
 class BP_image(object):
     def __init__(self):
         self.train_x,self.train_y = load_train_data()
         self.validate_x,self.validate_y=load_validation_data()
+
+        print (len(self.train_y))
 
         self.layer0=HiddenLayer(784,100)
         self.layer1=HiddenLayer(100,30)
         self.layer2=SoftmaxLayer(30,10)
 
         self.learningrate = 0.08
-        self.MAX_EPOCH = 1
+        self.MAX_EPOCH = 10
 
-        self.DEBUG=True
+        self.DEBUG=False
 
         self.layer0.setLearningrate(self.learningrate)
         self.layer1.setLearningrate(self.learningrate)
@@ -64,7 +67,14 @@ class BP_image(object):
         output0 = self.layer0.output(x)
         output1 = self.layer1.output(output0)
         output2 = self.layer2.output(output1)
-        # print output2
+        # print ('weight')
+        # print (self.layer0.W)
+        # print (self.layer1.W)
+        # print (self.layer2.W)
+        # print ('output......')
+        # print (output0)
+        # print (output1)
+        # print (output2)
         # print d[1],utils.argmax(output2)
         return[output2,output1,output0]
 
@@ -93,21 +103,19 @@ class BP_image(object):
 
         self.layer1.delta = utils.inner(utils.dot(utils.T(self.layer2.W), self.layer2.delta),
                                         [[o[0] * (1 - o[0])] for o in output1])
-        print ("deltaW21",deltaW21)
+        # print ("deltaW21",deltaW21)
+        # print ('self.layer1.delta',self.layer1.delta)
+        # print (output0)
         deltaW10 = utils.dot(self.layer1.delta, utils.T(output0))
         deltab10 = self.layer1.delta
         self.layer1.update(deltaW10, deltab10)
 
-        print ("deltaW10",deltaW10)
+        # print ("deltaW10",deltaW10)
 
 
         self.layer0.delta = utils.inner(utils.dot(utils.T(self.layer1.W), self.layer1.delta),
                                         [[o[0] * (1 - o[0])] for o in output0])
 
-        # print("X",len(x))
-        # print(len(x[0]))
-        # print(len(self.layer0.delta))
-        # print(len(self.layer0.delta[0]))
 
         deltaW00 = utils.dot(self.layer0.delta, x)
         deltab00 = self.layer0.delta
@@ -122,4 +130,4 @@ class BP_image(object):
 
 if __name__=="__main__":
     model = BP_image()
-    model.train()
+    # model.train()

@@ -7,6 +7,8 @@ class utils(object):
     @classmethod
     def randomWeight(cls, height, width):
         W_bound = math.sqrt(6.0 / (height + width))
+        if height*width>1000:
+            W_bound/=1000
         return [[random.uniform(-W_bound, W_bound) for w in range(width)] for h in range(height)]
 
     '''
