@@ -66,7 +66,10 @@ class utils(object):
         :param input: 一个数
         :return:
         '''
-        return 1. / (1. + math.exp(-x))
+        try:
+            return 1. / (1. + math.exp(-x))
+        except OverflowError:
+            print x
 
     '''
     对x内所有元素加和

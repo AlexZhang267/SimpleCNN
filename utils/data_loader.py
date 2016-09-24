@@ -11,7 +11,11 @@ def load_validation_data():
 
 
 def load_data(filename):
-    fin = open(filename,'r')
+    try:
+        fin = open(filename,'r')
+    except IOError:
+        fin=open('../'+filename,'r')
+
     count = 0
     data = []
     tag = []
@@ -47,7 +51,7 @@ def load_data(filename):
     return data,tag
 
 def load_number():
-    f = open('dataset/number.txt')
+    f = open('../dataset/number.txt')
     train_x=[]
     train_y=[]
     dataset=[]
