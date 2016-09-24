@@ -27,9 +27,9 @@ def load_data(filename):
         d =[int(e) for e in line.split()]
 
         if not len(d)==785:
-            print d
-            print len(d)
-            print count
+            # print d
+            # print len(d)
+            # print count
             raise TypeError
 
         # # reformat data to a list: [[raw data], [tag]]
@@ -43,5 +43,22 @@ def load_data(filename):
         tag.append(d[-1])
 
 
-    print len(data)
+    # print len(data)
     return data,tag
+
+def load_number():
+    f = open('dataset/number.txt')
+    train_x=[]
+    train_y=[]
+    dataset=[]
+    for line in f:
+        line = line.strip().split()
+        dataset.append(line)
+        # assert len(line)==8
+        # train_x.append(line[0:7])
+        # train_y.append(line[-1])
+
+    # train_x=[[float(e) for e in row] for row in train_x]
+    # train_y=[[float(e) for e in row] for row in train_y]
+
+    return dataset

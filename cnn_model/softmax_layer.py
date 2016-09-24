@@ -34,15 +34,6 @@ class SoftmaxLayer(object):
         return -T.mean(T.log(self.p_y_given_x)[T.arange(y.shape[0]), y])
 
     def errors(self, y):
-        """Return a float representing the number of errors in the minibatch
-        over the total number of examples of the minibatch ; zero one
-        loss over the size of the minibatch
-
-        :type y: theano.tensor.TensorType
-        :param y: corresponds to a vector that gives for each example the
-                  correct label
-        """
-
         # check if y has same dimension of y_pred
         if y.ndim != self.y_pred.ndim:
             raise TypeError(

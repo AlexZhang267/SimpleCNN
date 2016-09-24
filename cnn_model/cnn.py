@@ -57,7 +57,7 @@ class CNN(object):
         # output is (mini_batch_size, 10, 12, 12)
         layer0 = ConnPoolLayer(
             input=layer0_input,
-            filter_shape=(10, 1, 5, 5),  # 10filters, 1 feature map, 5 pixels height, 5 pixels width
+            filter_shape=(50, 1, 5, 5),  # 10filters, 1 feature map, 5 pixels height, 5 pixels width
             image_shape=(self.mini_batch_size, 1, 28, 28),
         )
 
@@ -66,8 +66,8 @@ class CNN(object):
         # output is (mini_batch_size,5,4,4)
         layer1 = ConnPoolLayer(
             input=layer0.output,
-            filter_shape=(5, 10, 5, 5),
-            image_shape=(self.mini_batch_size, 10, 12, 12)
+            filter_shape=(5, 50, 5, 5),
+            image_shape=(self.mini_batch_size, 50, 12, 12)
         )
 
         #  转化成(mini_batch_size, 5*4*4)

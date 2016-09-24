@@ -8,8 +8,8 @@ class ConnPoolLayer(object):
     def __init__(self, input, filter_shape, image_shape, poolsize=(2,2)):
         '''
         :param input: input data
-        :param filter_shape: (number of filters, number of input feature maps, filter height, filter width)
-        :param image_shape:(batch size, number of feature maps, image height, image width)
+        :param filter_shape: (number.txt of filters, number.txt of input feature maps, filter height, filter width)
+        :param image_shape:(batch size, number.txt of feature maps, image height, image width)
         :param poolsize:pool size, default is (2,2)
         '''
         self.input = input
