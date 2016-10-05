@@ -108,4 +108,9 @@ class BPNN(object):
         self.layer0.update(deltaW00, deltab00)
 
 
-BPNN().train()
+if __name__=="__main__":
+    BPNN().train()
+
+
+
+

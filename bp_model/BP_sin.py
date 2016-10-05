@@ -72,14 +72,13 @@ class BP_sin(object):
     def cost(self):
         data = zip(self.validate_x, self.validate_y)
         cost=0.
-        for epoch in range(self.MAX_EPOCH):
-            for d in data:
-                x = [[d[0]]]
-                y = [[d[1]]]
+        for d in data:
+            x = [[d[0]]]
+            y = [[d[1]]]
 
-                output0 = self.layer0.output(x)
-                output1 = self.layer1.output(output0)
-                cost+=(output1[0][0]-y[0][0])**2
+            output0 = self.layer0.output(x)
+            output1 = self.layer1.output(output0)
+            cost+=(output1[0][0]-y[0][0])**2
         cost = cost/len(self.validate_y)
         return cost
 
@@ -94,7 +93,7 @@ class BP_sin(object):
             output2 = self.layer1.output(tmp)
             print(output2)
             y_pred=output2[0][0]
-            print ("pred_num: %f,read value %f"%(y_pred,y))
+            print ("pred_num: %f,true value %f, bias is %f"%(y_pred,y,y-y_pred))
 
 if __name__=='__main__':
     model =BP_sin()

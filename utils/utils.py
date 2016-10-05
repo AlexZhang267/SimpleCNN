@@ -11,6 +11,11 @@ class utils(object):
             W_bound/=1000
         return [[random.uniform(-W_bound, W_bound) for w in range(width)] for h in range(height)]
 
+    @classmethod
+    def zerosWeight(cls,height,width):
+        return [[0 for w in range(width)] for h in range(height)]
+
+
     '''
     仅仅支持二维矩阵乘以二维矩阵
     '''

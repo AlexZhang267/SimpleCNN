@@ -98,6 +98,8 @@ class BP_number(object):
             print(output2)
             print(utils.argmax(output2))
 
-model = BP_number()
-model.train()
-model.test()
+
+if __name__=='--main__':
+    model = BP_number()
+    model.train()
+    model.test()
