@@ -35,12 +35,9 @@ def load_data(filename):
         tmp_data.append(d)
     random.shuffle(tmp_data)
     for d in tmp_data:
-        data.append(d[:-1])
-        data=[d/255. for d in data]
+        data.append([dd/255. for dd in d[:-1]])
         tag.append(d[-1])
 
-
-    # print len(data)
     return data,tag
 
 def load_number():

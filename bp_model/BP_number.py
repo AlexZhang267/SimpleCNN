@@ -34,6 +34,8 @@ class BP_number(object):
             for i in range(len(self.train_x)):
                 self.train_x[i] = [self.train_x[i]]
 
+
+            cost = 0.
             for i in range(DATASIZE):
                 input_x = utils.T(self.train_x[i])
                 input_y = self.train_y[i]
@@ -45,13 +47,15 @@ class BP_number(object):
                 # print(input_y,y_pred,layer2Out)
 
                 #
-                # if not input_y==y_pred:
-                #     error+=1
-                #     # self.backPropagation(input_x,layer0Out,layer1Out,layer2Out,input_y)
-                self.backPropagation(input_x,layer0Out,layer2Out,input_y)
+
+                if not input_y==y_pred:
+                    error+=1
+                #     self.backPropagation(input_x,layer0Out,layer1Out,layer2Out,input_y)
+                cost += self.backPropagation(input_x,layer0Out,layer2Out,input_y)
 
             if(epoch%20==0):
                 print("epoch %d error rate %f"%(epoch,(error/DATASIZE)))
+                print ("cost%f"%(cost/DATASIZE))
             # print("layer1 ",self.layer2.W)
     def backPropagation(self,input,output0,output2,y):
     # def backPropagation(self,input,output0,output1,output2,y):
@@ -64,11 +68,12 @@ class BP_number(object):
         '''
         tmp=[0 for i in range(len(output2))]
         tmp[int(y)]=1
-
+        cost = 0
         self.layer2.delta=[]
         for j in range(len(output2)):
             d=[]
             d.append((output2[j][0]-tmp[j])*output2[j][0]*(1-output2[j][0]))
+            cost+=output2[j][0]-tmp[j]
             self.layer2.delta.append(d)
 
 
@@ -83,6 +88,7 @@ class BP_number(object):
         deltab00 = self.layer0.delta
 
         self.layer0.update(deltaW00, deltab00)
+        return cost
 
     def test(self):
         str = raw_input("please enter a number:[1,1,1,1,1,1,1]")
@@ -99,7 +105,7 @@ class BP_number(object):
             print(utils.argmax(output2))
 
 
-if __name__=='--main__':
+if __name__=='__main__':
     model = BP_number()
     model.train()
     model.test()

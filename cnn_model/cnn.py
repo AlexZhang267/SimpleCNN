@@ -1,4 +1,5 @@
 # coding=utf-8
+from __future__ import print_function
 from utils.data_loader import load_train_data, load_validation_data
 import theano.tensor as T
 import theano
@@ -6,6 +7,7 @@ from conv_pool_layer import ConnPoolLayer
 from full_connect_layer import FullConnectLayer
 from softmax_layer import SoftmaxLayer
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 class CNN(object):
@@ -42,6 +44,12 @@ class CNN(object):
 
         self.learning_rate = 0.05
         self.n_epochs = 100
+        self.validateError=[]
+        self.trainError=[]
+        self.update_num=0
+        self.momentum=0
+        self.DEBUG = True
+        self.current_epoch = 0
 
     def train(self):
         index = T.lscalar()
@@ -57,7 +65,7 @@ class CNN(object):
         # output is (mini_batch_size, 10, 12, 12)
         layer0 = ConnPoolLayer(
             input=layer0_input,
-            filter_shape=(50, 1, 5, 5),  # 10filters, 1 feature map, 5 pixels height, 5 pixels width
+            filter_shape=(20, 1, 5, 5),  # 10filters, 1 feature map, 5 pixels height, 5 pixels width
             image_shape=(self.mini_batch_size, 1, 28, 28),
         )
 
@@ -66,7 +74,7 @@ class CNN(object):
         # output is (mini_batch_size,5,4,4)
         layer1 = ConnPoolLayer(
             input=layer0.output,
-            filter_shape=(5, 50, 5, 5),
+            filter_shape=(5, 20, 5, 5),
             image_shape=(self.mini_batch_size, 50, 12, 12)
         )
 
@@ -85,16 +93,19 @@ class CNN(object):
             n_out=8
         )
 
-        cost = layer3.negative_log_likelihood(y)
+        cost = layer3.negative_log_likelihood(y) + 0.002*(T.sum(layer1.W * layer1.W)+ T.sum(layer2.W * layer2.W)+ T.sum(layer3.W * layer3.W))
 
         params = layer3.params + layer2.params + layer1.params + layer0.params
 
-        grads = T.grad(cost, params)
+        # grads = T.grad(cost, params)
 
-        updates = [
-            (param_i, param_i - self.learning_rate * grad_i)
-            for param_i, grad_i in zip(params, grads)
-            ]
+
+
+        # updates = [
+        #     (param_i, param_i + - self.learning_rate * grad_i)
+        #     for param_i, grad_i in zip(params, grads)
+        #     ]
+        updates = self.gradient_updates_momentum(cost,params)
 
         train_model = theano.function(
             inputs=[index],
@@ -125,7 +136,8 @@ class CNN(object):
             validation_losses = [validation_model(i)
                                  for i in range(self.n_validation_batches)]
             this_validation_loss = np.mean(validation_losses)
-            print ("error rate:%f"%this_validation_loss)
+            print ("validation error rate:%f"%this_validation_loss)
+            self.validateError.append(this_validation_loss)
 
 
             ave_cost = []
@@ -142,10 +154,46 @@ class CNN(object):
                 #     break
             print (ave_cost)
             ave_cost = np.mean(ave_cost)
-            print("ave cost is ",ave_cost)
+            ave_cost/=self.mini_batch_size
+            self.trainError.append(ave_cost)
+            print("ave cost is %f"%(ave_cost))
             epoch += 1
+            if self.DEBUG and epoch%5==0:
+                # print("go on? [y/n]")
+                str = raw_input("go on? [y/n]")
+                if str=='y':
+                    pass
+                else:
+                    self.current_epoch = epoch
+                    break
 
 
+    def plotError(self):
+        x=np.linspace(1,self.current_epoch,self.current_epoch)
+        plt.scatter(x,self.trainError,c='red')
+        plt.scatter(x,self.validateError,c='blue')
+        plt.show()
 
+    def gradient_updates_momentum(self,cost,params):
+        if self.update_num==0:
+            self.update_num+=1
+            grads = T.grad(cost, params)
+            self.momentum = 0.9 * self.learning_rate * np.asarray(grads)
+            return  [(param_i, param_i - self.learning_rate * grad_i)
+                for param_i, grad_i in zip(params, grads)]
+        else:
+            self.update_num+=1
+            grads = T.grad(cost,params)
+            updates=[
+                (param_i, param_i+momentum_i - self.learning_rate * grad_i)
+                for param_i, grad_i,momentum_i in zip(params, grads,self.momentum)
+            ]
+            self.momentum = 0.9*(self.momentum - np.asarray(grads))
+
+            return updates
 if __name__ == '__main__':
-    CNN().train()
+    cnn=CNN()
+    cnn.train()
+    cnn.plotError()
+
+
