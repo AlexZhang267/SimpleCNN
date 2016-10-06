@@ -28,6 +28,8 @@ class SoftmaxLayer(object):
         self.p_y_given_x = T.nnet.softmax(T.dot(input, self.W) + self.b)
         self.y_pred = T.argmax(self.p_y_given_x, axis=1)
         self.params = [self.W, self.b]
+        self.error_validate_image=[]
+        self.error_validate_flag=False
 
     def negative_log_likelihood(self, y):
         # print y.dtype
@@ -45,5 +47,19 @@ class SoftmaxLayer(object):
             # the T.neq operator returns a vector of 0s and 1s, where 1
             # represents a mistake in prediction
             return T.mean(T.neq(self.y_pred, y))
+        else:
+            raise NotImplementedError()
+
+    def error_image(self,y):
+        if y.ndim != self.y_pred.ndim:
+            raise TypeError(
+                'y should have the same shape as self.y_pred',
+                ('y', y.type, 'y_pred', self.y_pred.type)
+            )
+        # check if y is of the correct datatype
+        if y.dtype.startswith('int'):
+            # the T.neq operator returns a vector of 0s and 1s, where 1
+            # represents a mistake in prediction
+            return [self.y_pred,y]
         else:
             raise NotImplementedError()

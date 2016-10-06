@@ -1,7 +1,7 @@
 #coding=utf-8
 import numpy as np
 from hidden_layer import HiddenLayer
-from utils.utils import utils
+from utils.math_utils import utils
 from layer_output_sin import SinOutputLayer
 
 

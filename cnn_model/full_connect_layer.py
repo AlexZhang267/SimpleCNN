@@ -30,5 +30,5 @@ class FullConnectLayer(object):
             name='b',
             borrow=True
         )
-        self.output = T.nnet.sigmoid(T.dot(self.input, self.W) + self.b)
+        self.output = T.nnet.relu(T.dot(self.input, self.W) + self.b)
         self.params = [self.W, self.b]

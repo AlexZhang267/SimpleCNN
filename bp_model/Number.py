@@ -4,7 +4,7 @@ import random
 from utils.data_loader import load_number
 from hidden_layer import HiddenLayer
 from softmax_layer import SoftmaxLayer
-from utils.utils import utils
+from utils.math_utils import utils
 
 class BPNN(object):
     def __init__(self):

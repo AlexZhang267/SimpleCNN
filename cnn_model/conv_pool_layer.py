@@ -62,11 +62,12 @@ class ConnPoolLayer(object):
             ignore_border=True
         )
 
-        self.output = T.tanh(pooled_out + self.b.dimshuffle('x',0,'x','x'))
+        # self.output = T.tanh(pooled_out + self.b.dimshuffle('x',0,'x','x'))
+        self.output = T.nnet.relu(pooled_out + self.b.dimshuffle('x',0,'x','x'))
+
 
         self.params = [self.W, self.b]
 
-        # self.input = input 有什么用
         self.input = input
 
 

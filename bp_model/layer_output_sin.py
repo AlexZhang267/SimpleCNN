@@ -1,5 +1,5 @@
 #coding=utf-8
-from utils.utils import utils
+from utils.math_utils import utils
 class SinOutputLayer(object):
     def __init__(self, fan_in, fan_out):
         self.fan_in = fan_in

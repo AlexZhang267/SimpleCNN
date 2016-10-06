@@ -1,5 +1,5 @@
 #coding=utf-8
-from utils.utils import utils
+from utils.math_utils import utils
 class SoftmaxLayer(object):
     def __init__(self, fan_in, fan_out):
         self.fan_in = fan_in
@@ -8,6 +8,7 @@ class SoftmaxLayer(object):
         self.b = utils.randomWeight(fan_out, 1)
         self.delta=[[0] for i in range(fan_out)]
         self.learningrate=0.05
+
 
     def setLearningrate(self, lr):
         self.learningrate = lr

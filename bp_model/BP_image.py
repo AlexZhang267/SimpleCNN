@@ -1,6 +1,6 @@
 #coding=utf-8
 from utils.data_loader import load_train_data,load_validation_data
-from utils.utils import utils
+from utils.math_utils import utils
 from hidden_layer import HiddenLayer
 from softmax_layer import SoftmaxLayer
 import time

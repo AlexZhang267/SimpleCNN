@@ -1,6 +1,6 @@
 #coding=utf-8
 import numpy as np
-from utils.utils import utils
+from utils.math_utils import utils
 class HiddenLayer(object):
     def __init__(self, fan_in, fan_out):
         self.fan_in = fan_in
